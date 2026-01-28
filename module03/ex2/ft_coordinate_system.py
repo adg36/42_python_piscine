@@ -1,0 +1,52 @@
+import math
+
+
+def ft_coordinate_system() -> None:
+    pos_a = (0, 0, 0)
+    pos_b = (10, 20, 5)
+
+    print(f"Position created: {pos_b}")
+    print_distance(pos_a, pos_b)
+
+    good_coordinates = "3,4,0"
+    bad_coordinates = "abc,def,ghi"
+
+    print(f'Parsing coordinates: "{good_coordinates}"')
+    pos_c = parse_coordinates(good_coordinates)
+    print(f"Parsed position: {pos_c}")
+    print_distance(pos_a, pos_c)
+    print(f'Parsing invalid coordinates: "{bad_coordinates}"')
+    parse_coordinates(bad_coordinates)
+
+    print("Unpacking demonstration:")
+    (x, y, z) = pos_c
+    print(f"Player at x={x}, y={y}, z={z}\n"
+          f"Coordinates: X={x}, Y={y}, Z={z}")
+
+
+def parse_coordinates(coordinates: str) -> tuple:
+    coord_list = coordinates.split(",")
+    try:
+        for i in range(len(coord_list)):
+            coord_list[i] = int(coord_list[i])
+    except ValueError as e:
+        print(f"Error parsing coordinates: ", e,
+              f"\nError details - Type: {type(e)}, Args: {e.args}\n")
+    else:
+        position = tuple((coord_list[0], coord_list[1], coord_list[2]))
+        return position
+
+
+def print_distance(pos_a: tuple, pos_b: tuple) -> None:
+    distance = math.sqrt((pos_b[0] - pos_a[0])**2 +
+                         (pos_b[1] - pos_a[1])**2 + (pos_b[2] - pos_a[2])**2)
+    print(f"Distance between {pos_a} and {pos_b}: {distance:.2f}\n")
+
+
+def main() -> None:
+    print("=== Game Coordinate System ===\n")
+    ft_coordinate_system()
+
+
+if __name__ == "__main__":
+    main()
