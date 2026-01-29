@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import math
 
 
@@ -16,8 +18,11 @@ def ft_coordinate_system() -> None:
     print(f"Parsed position: {pos_c}")
     print_distance(pos_a, pos_c)
     print(f'Parsing invalid coordinates: "{bad_coordinates}"')
-    parse_coordinates(bad_coordinates)
-
+    try:
+        parse_coordinates(bad_coordinates)
+    except ValueError as e:
+        print("Error parsing coordinates: ", e,
+              f"\nError details - Type: {type(e).__name__}, Args: {e.args}\n")
     print("Unpacking demonstration:")
     (x, y, z) = pos_c
     print(f"Player at x={x}, y={y}, z={z}\n"
@@ -29,12 +34,10 @@ def parse_coordinates(coordinates: str) -> tuple:
     try:
         for i in range(len(coord_list)):
             coord_list[i] = int(coord_list[i])
-    except ValueError as e:
-        print(f"Error parsing coordinates: ", e,
-              f"\nError details - Type: {type(e)}, Args: {e.args}\n")
-    else:
-        position = tuple((coord_list[0], coord_list[1], coord_list[2]))
-        return position
+    except ValueError:
+        raise
+    position = tuple((coord_list[0], coord_list[1], coord_list[2]))
+    return position
 
 
 def print_distance(pos_a: tuple, pos_b: tuple) -> None:
