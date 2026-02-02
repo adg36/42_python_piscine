@@ -3,12 +3,12 @@
 def garden_operations() -> None:
     print("Testing ValueError...")
     try:
-        int("abc")
+        raise ValueError
     except ValueError:
         print("Caught ValueError: invalid literal for int()\n")
     print("Testing ZeroDivisionError...")
     try:
-        50 / 0
+        raise ZeroDivisionError
     except ZeroDivisionError:
         print("Caught ZeroDivisionError: division by zero\n")
     print("Testing FileNotFoundError...")
@@ -18,25 +18,23 @@ def garden_operations() -> None:
         print("Caught FileNotFoundError: No such file 'missing.txt'\n")
     print("Testing KeyError...")
     try:
-        data = {}
-        data["missing\\_plant"]
+        raise KeyError
     except KeyError:
         print("Caught KeyError: 'missing\\_plant'\n")
     print("Testing multiple errors together...")
     try:
-        data = {}
-        int(data["missing\\_plant"])
+        raise KeyError
     except (ValueError, KeyError):
         print("Caught an error, but program continues!\n")
 
 
 def test_error_types() -> None:
-    print("=== Garden Error types Demo ===\n")
+    print("=== Garden Error Types Demo ===\n")
     garden_operations()
     print("All error types tested successfully!")
 
 
-def main():
+def main() -> None:
     test_error_types()
 
 

@@ -11,8 +11,10 @@ def ft_garden_intro():
           "\nAge:", age,
           "\n\n=== End of Program ===")
 
+
 def main():
     ft_garden_intro()
+
 
 if __name__ == "__main__":
     main()

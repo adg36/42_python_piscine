@@ -22,7 +22,7 @@ def ft_coordinate_system() -> None:
         parse_coordinates(bad_coordinates)
     except ValueError as e:
         print("Error parsing coordinates: ", e,
-              f"\nError details - Type: {type(e).__name__}, Args: {e.args}\n")
+              f"\nError details - Type: ValueError, Args: {e.args}\n")
     print("Unpacking demonstration:")
     (x, y, z) = pos_c
     print(f"Player at x={x}, y={y}, z={z}\n"
@@ -30,13 +30,14 @@ def ft_coordinate_system() -> None:
 
 
 def parse_coordinates(coordinates: str) -> tuple:
-    coord_list = coordinates.split(",")
     try:
-        for i in range(len(coord_list)):
-            coord_list[i] = int(coord_list[i])
+        x_str, y_str, z_str = coordinates.split(",")
+        x = int(x_str)
+        y = int(y_str)
+        z = int(z_str)
+        position = tuple((x, y, z))
     except ValueError:
         raise
-    position = tuple((coord_list[0], coord_list[1], coord_list[2]))
     return position
 
 

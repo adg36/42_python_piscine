@@ -11,8 +11,10 @@ def ft_command_quest() -> None:
     else:
         print(f"{name}\n"
               f"Arguments received: {len(sys.argv) - 1}")
-        for i in range(1, len(sys.argv)):
+        i = 1
+        while i < len(sys.argv):
             print(f"Argument {i}: {sys.argv[i]}")
+            i += 1
         print(f"{total}")
 
 

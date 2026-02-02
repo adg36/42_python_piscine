@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
 class GardenError(Exception):
-    def __init__(self, message="A garden problem occurred!"):
+    def __init__(self, message: str = "A garden problem occurred!") -> None:
         super().__init__(message)
 
 
 class PlantError(GardenError):
-    def __init__(self, message="The tomato plant is wilting!"):
+    def __init__(self, message: str = "The tomato plant is wilting!") -> None:
         super().__init__(message)
 
 
 class WaterError(GardenError):
-    def __init__(self, message="Not enough water in the tank!"):
+    def __init__(self, message: str = "Not enough water in the tank!") -> None:
         super().__init__(message)
 
 

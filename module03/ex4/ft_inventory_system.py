@@ -2,110 +2,94 @@
 
 import sys
 
+
 def ft_inventory_system() -> None:
-    inventory = dict()
+    # parse the arguments into a dictionary
     args = sys.argv
-    i = 1
-    while i < len(args):
-        arg = args[i]
-        colon_pos = 0
-        while colon_pos < len(arg):
-            if arg[colon_pos] == ':':
-                break
-            colon_pos = colon_pos + 1
-        
-        item = arg[0:colon_pos]
-        count = int(arg[colon_pos + 1:])
+    inventory = dict()
+    restock = []
+    for arg in args[1:]:
+        item, count_str = arg.split(":")
+        count = int(count_str)
+        if count <= 1:
+            restock.append(item)
         inventory[item] = count
-        i = i + 1
-    
+
+    # sort the values
+    values_list = []
+    for value in inventory.values():
+        values_list.append(value)
+    sorted_values_list = values_list.copy()
+    sorted_values_list.sort(reverse=True)
+
+    # create new dictionary in descending order
+    sorted_inventory = {
+            "Moderate": dict(),
+            "Scarce": dict()
+    }
+    copied = []
+    for val in sorted_values_list:
+        for item, count in inventory.items():
+            if count == val and item not in copied:
+                if count >= 5:
+                    sorted_inventory["Moderate"].update({item: count})
+                    copied.append(item)
+                else:
+                    sorted_inventory["Scarce"].update({item: count})
+                    copied.append(item)
+
+    # calculate total and unique items
     total_items = 0
     for count in inventory.values():
         total_items = total_items + count
-    
     unique_types = len(inventory)
-    
+
     print("=== Inventory System Analysis ===")
     print(f"Total items in inventory: {total_items}")
     print(f"Unique item types: {unique_types}")
-    
-    sorted_items = []
-    for item in inventory.keys():
-        sorted_items.append((item, inventory[item]))
-    
-    n = len(sorted_items)
-    i = 0
-    while i < n:
-        j = 0
-        while j < n - i - 1:
-            if sorted_items[j][1] < sorted_items[j + 1][1]:
-                temp = sorted_items[j]
-                sorted_items[j] = sorted_items[j + 1]
-                sorted_items[j + 1] = temp
-            elif sorted_items[j][1] == sorted_items[j + 1][1]:
-                if sorted_items[j][0] > sorted_items[j + 1][0]:
-                    temp = sorted_items[j]
-                    sorted_items[j] = sorted_items[j + 1]
-                    sorted_items[j + 1] = temp
-            j = j + 1
-        i = i + 1
-    
+
+    # calculate and print percentages
     print("\n=== Current Inventory ===")
-    for item_tuple in sorted_items:
-        item = item_tuple[0]
-        count = item_tuple[1]
-        percentage = (count / total_items) * 100
-        unit_label = "unit"
-        if count != 1:
-            unit_label = "units"
-        print(f"{item}: {str(count)} {unit_label} ({percentage:.1f}%)")
-    
-    most_item = ""
-    most_count = 0
-    least_item = ""
-    least_count = total_items + 1
-    
-    for item in inventory.keys():
-        count = inventory[item]
-        if count > most_count:
-            most_count = count
-            most_item = item
-        if count < least_count:
-            least_count = count
-            least_item = item
-    
-    print("\n=== Inventory Statistics ===")
-    print("Most abundant: " + most_item + " (" + str(most_count) + " units)")
-    print("Least abundant: " + least_item + " (" + str(least_count) + " unit)")
-    
-    moderate = dict()
-    scarce = dict()
-    
-    for item in inventory.keys():
-        count = inventory[item]
-        if count >= 4:
-            moderate[item] = count
+    for key in sorted_inventory["Moderate"].keys():
+        units = int(sorted_inventory["Moderate"].get(key))
+        percentage = units * 100 / total_items
+        print(f"{key}: {units} units ({percentage:.1f}%)")
+    for key in sorted_inventory["Scarce"].keys():
+        units = int(sorted_inventory["Scarce"].get(key))
+        percentage = units * 100 / total_items
+        if units == 1:
+            print(f"{key}: {units} unit ({percentage:.1f}%)")
         else:
-            scarce[item] = count
-    
+            print(f"{key}: {units} units ({percentage:.1f}%)")
+
+    # calculate most and least abundant
+    highest_value = sorted_values_list[0]
+    lowest_value = sorted_values_list[-1]
+    for k, v in inventory.items():
+        if v == highest_value:
+            most_abundant = k
+        if v == lowest_value:
+            least_abundant = k
+    print("\n=== Inventory Statistics ===")
+    print(f"Most abundant: {most_abundant} ({highest_value} units)")
+    print(f"Least abundant: {least_abundant} ({lowest_value} unit)")
+
     print("\n=== Item Categories ===")
-    print("Moderate: " + str(moderate))
-    print("Scarce: " + str(scarce))
-    
-    restock = []
-    for item in inventory.keys():
-        count = inventory[item]
-        if count <= 1:
-            restock.append(item)
-    
+    print(f'Moderate: {sorted_inventory["Moderate"]}')
+    print(f'Scarce: {sorted_inventory["Scarce"]}')
+
     print("\n=== Management Suggestions ===")
-    print("Restock needed: " + str(restock))
-    
+    print(f"Restock needed: {restock}")
+
     print("\n=== Dictionary Properties Demo ===")
-    print("Dictionary keys: " + str(list(inventory.keys())))
-    print("Dictionary values: " + str(list(inventory.values())))
-    sword_exists = "sword" in inventory
-    print("Sample lookup - 'sword' in inventory: " + str(sword_exists))
+    keys_list = []
+    for key in inventory.keys():
+        keys_list.append(key)
+    print(f"Dictionary keys: {keys_list}")
+    print(f"Dictionary values: {values_list}")
+
+    # find key in dictionary
+    print(f"Sample lookup - 'sword' in inventory: {'sword' in inventory}")
 
 
 def main() -> None:

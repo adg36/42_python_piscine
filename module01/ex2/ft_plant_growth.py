@@ -16,29 +16,28 @@ class Plant:
         """Makes plant age."""
         self.age += 1
 
-
-def get_info():
-    """Gets and prints information on my plants."""
-    rose = Plant("Rose", 25, 30)
-    sunflower = Plant("Sunflower", 80, 45)
-    cactus = Plant("Cactus", 15, 120)
-    plants = [rose, sunflower, cactus]
-    days = 8
-    for plant in plants:
-        initial_height = plant.height
+    def get_info(self):
+        """Gets and prints information on my plants."""
+        days = 8
+        initial_height = self.height
         for day in range(1, days):
             if day == 1 or day == 7:
                 print(f"=== Day {day} ===\n"
-                      f"{plant.name}: {plant.height}cm, {plant.age} days old")
-            final_height = plant.height
-            plant.grow()
-            plant.get_older()
+                      f"{self.name}: {self.height}cm, {self.age} days old")
+            final_height = self.height
+            self.grow()
+            self.get_older()
         growth = final_height - initial_height
         print(f"Growth this week: +{growth}cm\n")
 
 
 def main():
-    get_info()
+    rose = Plant("Rose", 25, 30)
+    sunflower = Plant("Sunflower", 80, 45)
+    cactus = Plant("Cactus", 15, 120)
+    plants = [rose, sunflower, cactus]
+    for plant in plants:
+        plant.get_info()
 
 
 if __name__ == "__main__":

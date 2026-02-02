@@ -50,12 +50,12 @@ class GardenManager:
 
 
 class GardenError(Exception):
-    def __init__(self, message="A garden problem occurred!"):
+    def __init__(self, message: str = "A garden problem occurred!") -> None:
         super().__init__(message)
 
 
 class WaterError(GardenError):
-    def __init__(self, message="Not enough water in tank"):
+    def __init__(self, message: str = "Not enough water in tank") -> None:
         super().__init__(message)
 
 

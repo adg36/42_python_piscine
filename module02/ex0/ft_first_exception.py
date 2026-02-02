@@ -29,7 +29,7 @@ def ft_first_exception() -> None:
     test_temperature_input()
 
 
-def main():
+def main() -> None:
     ft_first_exception()
 
 
