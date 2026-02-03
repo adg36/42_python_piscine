@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 def ft_ancient_text() -> None:
-    print("=== CYBER ARCHIVES – DATA RECOVERY SYSTEM ===\n")
+    print("=== CYBER ARCHIVES - DATA RECOVERY SYSTEM ===\n")
 
     filename = "ancient_fragment.txt"
     print(f"Accessing Storage Vault: {filename}")
-    
+
     try:
         file = open("ancient_fragment.txt")
         print("Connection established...\n"

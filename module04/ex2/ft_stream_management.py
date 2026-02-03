@@ -4,7 +4,7 @@ import sys
 
 
 def ft_stream_management() -> None:
-    print("=== CYBER ARCHIVES – COMMUNICATION SYSTEM ===\n")
+    print("=== CYBER ARCHIVES - COMMUNICATION SYSTEM ===\n")
 
     arch_id = input("Input Stream active. Enter archivist ID: ")
     status = input("Input Stream active. Enter status report: ")

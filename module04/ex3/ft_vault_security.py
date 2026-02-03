@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 def ft_vault_security() -> None:
-    print("=== CYBER ARCHIVES – VAULT SECURITY SYSTEM ===\n")
+    print("=== CYBER ARCHIVES - VAULT SECURITY SYSTEM ===\n")
 
     file = "classified_data.txt"
 
