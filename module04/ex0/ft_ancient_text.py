@@ -3,18 +3,18 @@
 def ft_ancient_text() -> None:
     print("=== CYBER ARCHIVES – DATA RECOVERY SYSTEM ===\n")
 
-    file = "ancient_fragment.txt"
-
-    print(f"Accessing Storage Vault: {file}")
-
+    filename = "ancient_fragment.txt"
+    print(f"Accessing Storage Vault: {filename}")
+    
     try:
-        with open(file) as f:
-            print("Connection established...\n"
-                  "\nRECOVERED DATA:")
-            print(f.read())
+        file = open("ancient_fragment.txt")
+        print("Connection established...\n"
+              "\nRECOVERED DATA:")
+        print(file.read())
     except FileNotFoundError:
         print("ERROR: Storage vault not found. Run data generator first.")
 
+    file.close()
     print("\nData recovery complete. Storage unit disconnected.")
 
 
