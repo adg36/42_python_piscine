@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict, Union, Optional
+from typing import Any, List
 
 
 class DataProcessor(ABC):
@@ -24,14 +24,16 @@ class NumericProcessor(DataProcessor):
 
     def process(self, data: Any) -> str:
         if not self.validate(data):
-            raise ValueError("Invalid numeric data: expected list/tuple of numbers")
+            raise ValueError("Invalid numeric data: "
+                             "expected list/tuple of numbers")
 
         try:
             count = len(data)
             total = sum(data)
             average = total / count
-        
-            result = f"Processed {count} numeric values, sum={total}, avg={average}"
+
+            result = (f"Processed {count} numeric values, "
+                      f"sum={total}, avg={average}")
             return result
         except Exception as e:
             raise ValueError(f"Error processing numeric data: {str(e)}")
@@ -58,16 +60,17 @@ class TextProcessor(DataProcessor):
     def process(self, data: Any) -> str:
         if not self.validate(data):
             raise ValueError("Invalid text data: expected non-empty string")
-        
+
         try:
             char_count = len(data)
             word_count = len(data.split())
-            
-            result = f"Processed text: {char_count} characters, {word_count} words"
+
+            result = (f"Processed text: {char_count} "
+                      f"characters, {word_count} words")
             return result
         except Exception as e:
             raise ValueError(f"Error processing text data: {str(e)}")
-    
+
     def validate(self, data: Any) -> bool:
         try:
             return isinstance(data, str) and len(data) > 0
@@ -77,17 +80,19 @@ class TextProcessor(DataProcessor):
     def format_output(self, result: str) -> str:
         return f"Output: {result}"
 
+
 class LogProcessor(DataProcessor):
     def __init__(self) -> None:
         pass
 
     def process(self, data: Any) -> str:
         if not self.validate(data):
-            raise ValueError("Invalid log data: expected string with log level")
+            raise ValueError("Invalid log data: "
+                             "expected string with log level")
         try:
             self.level = data.split(": ")[0]
             self.message = data.split(": ")[1]
-            
+
             if self.level == "ERROR":
                 level = "[ALERT]"
             elif self.level == "INFO":
@@ -111,11 +116,11 @@ class LogProcessor(DataProcessor):
         return f"Output: {result}"
 
 
-def demonstrate_polymorphism(processors: List[DataProcessor], 
-                            test_data: List[Any]) -> None:
+def demonstrate_polymorphism(processors: List[DataProcessor],
+                             test_data: List[Any]) -> None:
     print("\n=== Polymorphic Processing Demo ===")
     print("Processing multiple data types through same interface...")
-    
+
     for i, (processor, data) in enumerate(zip(processors, test_data), 1):
         try:
             result = processor.process(data)
