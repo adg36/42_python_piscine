@@ -143,8 +143,8 @@ class EventStream(DataStream):
 
     def __init__(self, stream_id: str) -> None:
         super().__init__(stream_id, "System Events")
-        self.total_events: int = 0
-        self.error_events: int = 0
+        self.total_events = 0
+        self.error_events = 0
 
     def process_batch(self, data_batch: List[Any]) -> str:
         try:
