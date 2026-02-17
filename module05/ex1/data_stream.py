@@ -190,7 +190,7 @@ class StreamProcessor:
                 stream_id = stream.stream_id
                 if stream_id in batches:
                     result = stream.process_batch(batches[stream_id])
-                    results.append(f"- {stream.stream_type}: "
+                    results.append(f"- {stream.name} data: "
                                    f"{stream.processed_count} {stream.ops} processed")
             except Exception as e:
                 results.append(f"- Error processing {stream.stream_id}: {e}")
@@ -210,7 +210,6 @@ class StreamProcessor:
                     filtered_results[stream_id] = filtered
             except Exception as e:
                 print(f"Filter error for {stream.stream_id}: {e}")
-
         return filtered_results
 
     def get_all_stats(self) -> List[Dict[str, Union[str, int, float]]]:
