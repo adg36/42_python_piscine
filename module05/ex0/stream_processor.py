@@ -19,8 +19,6 @@ class DataProcessor(ABC):
 
 
 class NumericProcessor(DataProcessor):
-    def __init__(self):
-        pass
 
     def process(self, data: Any) -> str:
         if not self.validate(data):
@@ -30,7 +28,7 @@ class NumericProcessor(DataProcessor):
         try:
             count = len(data)
             total = sum(data)
-            average = total / count
+            average = total / count if count > 0 else 0.0
 
             result = (f"Processed {count} numeric values, "
                       f"sum={total}, avg={average}")
@@ -54,8 +52,6 @@ class NumericProcessor(DataProcessor):
 
 
 class TextProcessor(DataProcessor):
-    def __init__(self):
-        pass
 
     def process(self, data: Any) -> str:
         if not self.validate(data):
@@ -82,8 +78,6 @@ class TextProcessor(DataProcessor):
 
 
 class LogProcessor(DataProcessor):
-    def __init__(self) -> None:
-        pass
 
     def process(self, data: Any) -> str:
         if not self.validate(data):
@@ -131,42 +125,27 @@ def demonstrate_polymorphism(processors: List[DataProcessor],
 
 def ft_stream_processor() -> None:
     print("=== CODE NEXUS - DATA PROCESSOR FOUNDATION ===")
-
-    num_data = [1, 2, 3, 4, 5]
-    print("\nInitializing Numeric Processor...")
-    num_proc = NumericProcessor()
-    print(f"Processing data: {num_data}")
-    num_result = num_proc.process(num_data)
-    if num_proc.validate(num_data):
-        print("Validation: Numeric data verified")
-    else:
-        print("Validation error: Could not verify numeric data.")
-    print(num_proc.format_output(num_result))
-
-    text_data = "Hello Nexus World"
-    print("\nInitializing Text Processor...")
-    text_proc = TextProcessor()
-    print(f'Processing data: "{text_data}"')
-    text_result = text_proc.process(text_data)
-    if text_proc.validate(text_data):
-        print("Validation: Text data verified")
-    else:
-        print("Validation error: Could not verify text data.")
-    print(text_proc.format_output(text_result))
-
-    log_data = "ERROR: Connection timeout"
-    print("\nInitializing Log Processor...")
-    log_proc = LogProcessor()
-    print(f'Processing data: "{log_data}"')
-    log_result = log_proc.process(log_data)
-    if log_proc.validate(log_data):
-        print("Validation: Log entry verified")
-    else:
-        print("Validation error: Could not verify log entry.")
-    print(log_proc.format_output(log_result))
+    
+    processors = {
+            "Numeric": (NumericProcessor(), [1, 2, 3, 4, 5]),
+            "Text": (TextProcessor(), "Hello Nexus World"),
+            "Log": (LogProcessor(), "ERROR: Connection timeout")
+    }
+    for name, (processor, data) in processors.items():
+        print(f"\nInitializing {name} Processor...")
+        if type(data) is str:
+            print(f'Processing data: "{data}"')
+        else:
+            print(f'Processing data: {data}')
+        result = processor.process(data)
+        if processor.validate(data):
+            print(f"Validation: {name} data verified")
+        else:
+            print(f"Validation error: Could not verify {name.lower()} data.")
+        print(processor.format_output(result))
 
     # polymorphism demonstration
-    processors = [num_proc, text_proc, log_proc]
+    processors = [NumericProcessor(), TextProcessor(), LogProcessor()]
     test_data = [[1, 2, 3], "Yellow Banana", "INFO: System ready"]
     demonstrate_polymorphism(processors, test_data)
 
