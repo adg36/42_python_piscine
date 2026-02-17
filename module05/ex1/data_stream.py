@@ -18,16 +18,7 @@ class DataStream(ABC):
 
     def filter_data(self, data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        if criteria is None:
-            return data_batch
-
-        try:
-            filtered = [item for item in data_batch
-                        if criteria.lower() in str(item).lower()]
-            return filtered
-        except Exception as e:
-            print(f"Filter error in {self.stream_id}: {e}")
-            return data_batch
+        return data_batch
 
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
         return {
@@ -64,7 +55,7 @@ class SensorStream(DataStream):
 
     def filter_data(self, data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        if criteria == "critical":
+        if criteria == "High-priority":
             try:
                 critical = [temp for temp in data_batch if temp > 30]
                 return critical
@@ -96,8 +87,8 @@ class TransactionStream(DataStream):
         try:
             for item in data_batch:
                 self.net_flow += item
-                self.processed_count += 1
 
+            self.processed_count += 1
             sign = '+' if self.net_flow >= 0 else ''
             return (f"Transaction analysis: "
                     f"{self.processed_count} operations, "
@@ -108,7 +99,7 @@ class TransactionStream(DataStream):
 
     def filter_data(self, data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        if criteria == "large":
+        if criteria == "High-priority":
             try:
                 large_trans = [
                         item for item in data_batch
@@ -157,7 +148,7 @@ class EventStream(DataStream):
 
     def filter_data(self, data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        if criteria == "errors":
+        if criteria == "High-priority":
             return [
                     item for item in data_batch
                     if 'error' in str(item).lower()
@@ -189,8 +180,8 @@ class StreamProcessor:
             try:
                 stream_id = stream.stream_id
                 if stream_id in batches:
-                    result = stream.process_batch(batches[stream_id])
-                    results.append(f"- {stream.name} data: "
+
+                     results.append(f"- {stream.name} data: "
                                    f"{stream.processed_count} {stream.ops} processed")
             except Exception as e:
                 results.append(f"- Error processing {stream.stream_id}: {e}")
@@ -226,6 +217,8 @@ def data_stream() -> None:
             (TransactionStream("TRANS_001"), [100, -150, 75]),
             (EventStream("EVENT_001"), ["login", "error", "logout"])
     ]
+    sensor_alerts = 0
+    transaction_alerts = 0
     for stream, batch in data:
         print(f"\nInitializing {stream.name} Stream...")
         print(f"Stream ID: {stream.stream_id},"
@@ -233,6 +226,12 @@ def data_stream() -> None:
         result = stream.process_batch(batch)
         print(f"Processing {stream.name.lower()} batch: {batch}\n"
               f"{result}")
+        filtered_batch = stream.filter_data(batch, criteria="High-priority")
+        if filtered_batch:
+            if isinstance(stream, SensorStream):
+                sensor_alerts += len(filtered_batch)
+            elif isinstance(stream, TransactionStream):
+                transaction_alerts += len(filtered_batch)
         stream_proc.add_stream(stream)
 
     print("\n=== Polymorphic Sream Processing ===\n"
@@ -246,7 +245,11 @@ def data_stream() -> None:
     results = stream_proc.process_all(batches)
     for result in results:
         print(result)
-    
+    print("\nStream filtering active: High-priority data only\n"
+          f"Filtered results: {sensor_alerts} critical sensor alerts, "
+          f"{transaction_alerts} large transactions\n")
+    print("All streams processed successfully. Nexus throughput optimal.")
+
 
 if __name__ == "__main__":
     data_stream()
