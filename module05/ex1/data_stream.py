@@ -42,21 +42,21 @@ class SensorStream(DataStream):
 
     def __init__(self, stream_id: str) -> None:
         super().__init__(stream_id, "Environmental Data")
+        self.processed_count = 0
         self.total_readings = 0
-        self.sum_temp = 0.0
+        self.sum_temp = 0
+        self.name = "Sensor"
+        self.ops = "readings"
 
     def process_batch(self, data_batch: List[Any]) -> str:
         try:
-            temps = [float(item.split(':')[1])
-                     for item in data_batch if 'temp' in str(item)]
-
             self.total_readings += len(data_batch)
-            self.sum_temp += sum(temps)
+            self.sum_temp += sum(data_batch)
             self.processed_count += 1
 
-            avg_temp = sum(temps) / len(temps) if temps else 0
+            avg_temp = self.sum_temp / self.total_readings
 
-            return (f"Sensor analysis: {len(data_batch)} readings "
+            return (f"Sensor analysis: {self.total_readings} readings "
                     f"processed, avg temp: {avg_temp:.1f}°C")
         except Exception as e:
             self.error_count += 1
@@ -66,8 +66,7 @@ class SensorStream(DataStream):
                     criteria: Optional[str] = None) -> List[Any]:
         if criteria == "critical":
             try:
-                critical = [item for item in data_batch if 'temp' in
-                            str(item) and float(str(item).split(':')[1]) > 30]
+                critical = [temp for temp in data_batch if temp > 30]
                 return critical
             except Exception:
                 return super().filter_data(data_batch, criteria)
@@ -88,32 +87,21 @@ class TransactionStream(DataStream):
 
     def __init__(self, stream_id: str) -> None:
         super().__init__(stream_id, "Financial Data")
-        self.total_transactions: int = 0
-        self.net_flow: int = 0
+        self.processed_count = 0
+        self.net_flow = 0
+        self.name = "Transaction"
+        self.ops = "operations"
 
     def process_batch(self, data_batch: List[Any]) -> str:
         try:
-            operations = 0
-            flow = 0
-
             for item in data_batch:
-                item_str = str(item)
-                if 'buy' in item_str:
-                    amount = int(item_str.split(':')[1])
-                    flow -= amount
-                    operations += 1
-                elif 'sell' in item_str:
-                    amount = int(item_str.split(':')[1])
-                    flow += amount
-                    operations += 1
+                self.net_flow += item
+                self.processed_count += 1
 
-            self.total_transactions += operations
-            self.net_flow += flow
-            self.processed_count += 1
-
-            sign = '+' if flow >= 0 else ''
-            return (f"Transaction analysis: {operations} operations, "
-                    f"net flow: {sign}{flow} units")
+            sign = '+' if self.net_flow >= 0 else ''
+            return (f"Transaction analysis: "
+                    f"{self.processed_count} operations, "
+                    f"net flow: {sign}{self.net_flow} units")
         except Exception as e:
             self.error_count += 1
             return f"Transaction processing error: {e}"
@@ -124,8 +112,7 @@ class TransactionStream(DataStream):
             try:
                 large_trans = [
                         item for item in data_batch
-                        if any(op in str(item) for op in ['buy', 'sell'])
-                        and int(str(item).split(':')[1]) > 100
+                        if item > 100
                 ]
                 return large_trans
             except Exception:
@@ -134,7 +121,7 @@ class TransactionStream(DataStream):
 
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
         stats = super().get_stats()
-        stats["total_transactions"] = self.total_transactions
+        stats["total_transactions"] = self.processed_count
         stats["net_flow"] = self.net_flow
         return stats
 
@@ -143,8 +130,11 @@ class EventStream(DataStream):
 
     def __init__(self, stream_id: str) -> None:
         super().__init__(stream_id, "System Events")
+        self.processed_count = 0
         self.total_events = 0
         self.error_events = 0
+        self.name = "Event"
+        self.ops = "events"
 
     def process_batch(self, data_batch: List[Any]) -> str:
         try:
@@ -200,7 +190,8 @@ class StreamProcessor:
                 stream_id = stream.stream_id
                 if stream_id in batches:
                     result = stream.process_batch(batches[stream_id])
-                    results.append(f"- {stream.stream_type}: {result}")
+                    results.append(f"- {stream.stream_type}: "
+                                   f"{stream.processed_count} {stream.ops} processed")
             except Exception as e:
                 results.append(f"- Error processing {stream.stream_id}: {e}")
 
@@ -224,3 +215,39 @@ class StreamProcessor:
 
     def get_all_stats(self) -> List[Dict[str, Union[str, int, float]]]:
         return [stream.get_stats() for stream in self.streams]
+
+
+def data_stream() -> None:
+    print("=== CODE NEXUS - POLYMORPHIC STREAM SYSTEM ===")
+    
+    stream_proc = StreamProcessor()
+
+    data = [
+            (SensorStream("SENSOR_001"),[25.0, 27.5, 22.5, 35.7]),
+            (TransactionStream("TRANS_001"), [100, -150, 75]),
+            (EventStream("EVENT_001"), ["login", "error", "logout"])
+    ]
+    for stream, batch in data:
+        print(f"\nInitializing {stream.name} Stream...")
+        print(f"Stream ID: {stream.stream_id},"
+              f" Type: {stream.stream_type}")
+        result = stream.process_batch(batch)
+        print(f"Processing {stream.name.lower()} batch: {batch}\n"
+              f"{result}")
+        stream_proc.add_stream(stream)
+
+    print("\n=== Polymorphic Sream Processing ===\n"
+          "Processing mixed stream types through unified interface...\n")
+    batches = {
+            "SENSOR_001": [25.0, 27.5, 22.5, 35.7],
+            "TRANS_001": [100, -150, 75],
+            "EVENT_001": ["login", "error", "logout"]
+    }
+    print("Batch 1 Results:")
+    results = stream_proc.process_all(batches)
+    for result in results:
+        print(result)
+    
+
+if __name__ == "__main__":
+    data_stream()

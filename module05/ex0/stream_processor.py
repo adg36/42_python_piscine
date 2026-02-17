@@ -95,7 +95,7 @@ class LogProcessor(DataProcessor):
 
             if self.level == "ERROR":
                 level = "[ALERT]"
-            elif self.level == "INFO":
+            else:
                 level = "[INFO]"
             result = f"{level} {self.level} level detected: {self.message}"
             return result
@@ -127,3 +127,51 @@ def demonstrate_polymorphism(processors: List[DataProcessor],
             print(f"Result {i}: {result}")
         except ValueError as e:
             print(f"Result {i}: Error - {e}")
+
+
+def ft_stream_processor() -> None:
+    print("=== CODE NEXUS - DATA PROCESSOR FOUNDATION ===")
+
+    num_data = [1, 2, 3, 4, 5]
+    print("\nInitializing Numeric Processor...")
+    num_proc = NumericProcessor()
+    print(f"Processing data: {num_data}")
+    num_result = num_proc.process(num_data)
+    if num_proc.validate(num_data):
+        print("Validation: Numeric data verified")
+    else:
+        print("Validation error: Could not verify numeric data.")
+    print(num_proc.format_output(num_result))
+
+    text_data = "Hello Nexus World"
+    print("\nInitializing Text Processor...")
+    text_proc = TextProcessor()
+    print(f'Processing data: "{text_data}"')
+    text_result = text_proc.process(text_data)
+    if text_proc.validate(text_data):
+        print("Validation: Text data verified")
+    else:
+        print("Validation error: Could not verify text data.")
+    print(text_proc.format_output(text_result))
+
+    log_data = "ERROR: Connection timeout"
+    print("\nInitializing Log Processor...")
+    log_proc = LogProcessor()
+    print(f'Processing data: "{log_data}"')
+    log_result = log_proc.process(log_data)
+    if log_proc.validate(log_data):
+        print("Validation: Log entry verified")
+    else:
+        print("Validation error: Could not verify log entry.")
+    print(log_proc.format_output(log_result))
+
+    # polymorphism demonstration
+    processors = [num_proc, text_proc, log_proc]
+    test_data = [[1, 2, 3], "Yellow Banana", "INFO: System ready"]
+    demonstrate_polymorphism(processors, test_data)
+
+    print("\nFoundation systems online. Nexus ready for advanced streams.")
+
+
+if __name__ == "__main__":
+    ft_stream_processor()

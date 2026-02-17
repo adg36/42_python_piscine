@@ -30,6 +30,7 @@ class InputStage:
     def process(self, data: Any) -> Dict:
         if isinstance(data, dict):
             return data
+        return ??????
 
 
 class TransformStage:
