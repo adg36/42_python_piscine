@@ -29,24 +29,31 @@ class InputStage:
 
     def process(self, data: Any) -> Dict:
         if isinstance(data, dict):
+            print(f"Input: {data}")
             return data
-        return ??????
+        else:
+            raise TypeError("Input data must be a dictionary")
 
 
 class TransformStage:
 
     def process(self, data: Any) -> Dict:
-        data_list = list(data.values())
-        new_data = {}
-        new_data[data_list[0]] = str(data_list[1]) + " " + data_list[2]
-        return new_data
+        value = data["value"]
+        status = "Normal range" if 15 <= value <= 30 else "Critical"
+        enriched = {**data, "status": status}
+        print(f"Transform: Enriched with metadata and validation")
+        return enriched
 
 
 class OutputStage:
 
     def process(self, data: Any) -> str:
-        line = ("Processed temperature reading: "
-                "23.5°C (Normal range)")
+        sensor = data.get("sensor", "unknown")
+        value = data.get("value", 0)
+        status = data.get("status", "Unknown status")
+        line = (f"Output: Processed {sensor} reading: "
+                f"{value}°C ({status})")
+        print(line)
         return line
 
 
@@ -56,6 +63,7 @@ class JSONAdapter(ProcessingPipeline):
         super().__init__(pipeline_id)
 
     def process(self, data: Any) -> Union[str, Any]:
+        print("\nProcessing JSON data through pipeline...")
         return super().process(data)
 
 
@@ -65,7 +73,8 @@ class CSVAdapter(ProcessingPipeline):
         super().__init__(pipeline_id)
 
     def process(self, data: Any) -> Union[str, Any]:
-        pass
+        print("\nProcessing CSV data through same pipeline...")
+        return super().process(data)
 
 
 class StreamAdapter(ProcessingPipeline):
@@ -74,7 +83,8 @@ class StreamAdapter(ProcessingPipeline):
         super().__init__(pipeline_id)
 
     def process(self, data: Any) -> Union[str, Any]:
-        pass
+        print("\nProcessing Stream data through same pipeline...")
+        return super().process(data)
 
 
 class NexusManager:
@@ -89,29 +99,50 @@ class NexusManager:
             raise TypeError("Only ProcessingPipeline instances can be added")
 
     def process(self, data: Any) -> Any:
+        result = None
         for pipeline in self.pipelines:
-            result = pipeline.process(data)
+            try:
+                result = pipeline.process(data)
+            except Exception as e:
+                print(f"Error in pipeline {pipeline.pipeline_id}: {e}")
+                print("Recovery initiated: Using fallback processor")
         return result
 
 
 def main():
+    print("=== CODE NEXUS - ENTERPRISE PIPELINE SYSTEM ===\n")
     # create NexusManager
     manager = NexusManager()
+    print("Initializing Nexus Manager...\n"
+          "Pipeline capacity: 1000 streams/second\n")
 
     # create pipelines
-    json_pipeline = JSONAdapter("JSON_001")
+    pipelines = [
+            JSONAdapter("JSON_001"),
+            CSVAdapter("CSV_001"),
+            StreamAdapter("Stream_001")
+    ]
 
-    # configure pipelines with stages
-    json_pipeline.add_stage(InputStage())
-    json_pipeline.add_stage(TransformStage())
-    json_pipeline.add_stage(OutputStage())
-
-    # add pipelines to manager
-    manager.add_pipeline(json_pipeline)
-
-    # send data into manager
-    raw_json = {"sensor": "temp", "value": 23.5, "unit": "C"}
-    result = manager.process(raw_json)
+    # configure pipelines with stages and add them to manager
+    print("Creating Data Processing Pipeline...")
+    print("Stage 1: Input validation and parsing")
+    print("Stage 2: Data transformation and enrichment")
+    print("Stage 3: Output formatting and delivery")
+    
+    print("\n=== Multi-Format Data Processing ===")
+    
+    for pipeline in pipelines:
+        pipeline.add_stage(InputStage())
+        pipeline.add_stage(TransformStage())
+        pipeline.add_stage(OutputStage())
+        manager.add_pipeline(pipeline)
+    
+    data = [{"sensor": "temp", "value": 23.5, "unit": "C"},
+            "user,action,timestamp",
+            "Real-time sensor stream"
+    ]
+    for batch in data:
+        result = manager.process(batch)
 
     # manager selects pipeline
 
@@ -124,7 +155,6 @@ def main():
     # adapter postprocesses result
 
     # result returned / printed
-    print(result)
 
 
 if __name__ == "__main__":
