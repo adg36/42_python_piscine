@@ -28,21 +28,31 @@ class ProcessingPipeline(ABC):
 class InputStage:
 
     def process(self, data: Any) -> Dict:
+        print(f"Input: {data}")
         if isinstance(data, dict):
-            print(f"Input: {data}")
             return data
         else:
-            raise TypeError("Input data must be a dictionary")
+            data_dict = {}
+            data_dict["data"] = data
+            return data_dict
 
 
 class TransformStage:
 
     def process(self, data: Any) -> Dict:
-        value = data["value"]
-        status = "Normal range" if 15 <= value <= 30 else "Critical"
-        enriched = {**data, "status": status}
-        print(f"Transform: Enriched with metadata and validation")
-        return enriched
+        if "value" in data.keys():
+            value = data["value"]
+            status = "Normal range" if 15 <= value <= 30 else "Critical"
+            enriched = {**data, "status": status}
+            print(f"Transform: Enriched with metadata and validation")
+            return enriched
+        elif "data" in data.keys():
+            if "," in data:
+                data = data.split(",")
+                print("Transform: Parsed and structured data")
+            else:
+                print("Transform: Aggregated and filtered")
+            return data
 
 
 class OutputStage:
@@ -58,6 +68,7 @@ class OutputStage:
 
 
 class JSONAdapter(ProcessingPipeline):
+    data_type = "json"
 
     def __init__(self, pipeline_id: str) -> None:
         super().__init__(pipeline_id)
@@ -68,6 +79,7 @@ class JSONAdapter(ProcessingPipeline):
 
 
 class CSVAdapter(ProcessingPipeline):
+    data_type = "csv"
 
     def __init__(self, pipeline_id: str) -> None:
         super().__init__(pipeline_id)
@@ -78,6 +90,7 @@ class CSVAdapter(ProcessingPipeline):
 
 
 class StreamAdapter(ProcessingPipeline):
+    data_type = "stream"
 
     def __init__(self, pipeline_id: str) -> None:
         super().__init__(pipeline_id)
@@ -85,6 +98,15 @@ class StreamAdapter(ProcessingPipeline):
     def process(self, data: Any) -> Union[str, Any]:
         print("\nProcessing Stream data through same pipeline...")
         return super().process(data)
+
+
+def detect_data_type(data: Any) -> str:
+    if isinstance(data, dict):
+        return "json"
+    elif isinstance(data, str) and "," in data:
+        return "csv"
+    else:
+        return "stream"
 
 
 class NexusManager:
@@ -99,13 +121,12 @@ class NexusManager:
             raise TypeError("Only ProcessingPipeline instances can be added")
 
     def process(self, data: Any) -> Any:
-        result = None
+        data_type = detect_data_type(data)
         for pipeline in self.pipelines:
-            try:
+            if pipeline.data_type == data_type:
                 result = pipeline.process(data)
-            except Exception as e:
-                print(f"Error in pipeline {pipeline.pipeline_id}: {e}")
-                print("Recovery initiated: Using fallback processor")
+            else:
+                print(f"No pipeline registered for {data_type}")
         return result
 
 
@@ -141,20 +162,10 @@ def main():
             "user,action,timestamp",
             "Real-time sensor stream"
     ]
+
     for batch in data:
         result = manager.process(batch)
-
-    # manager selects pipeline
-
-    # pipeline.process(data)
-
-    # adapter preprocesses data
-
-    # pipeline.run(data through stages)
-
-    # adapter postprocesses result
-
-    # result returned / printed
+        print(result)
 
 
 if __name__ == "__main__":
