@@ -2,7 +2,7 @@
 
 class GardenManager:
     def __init__(self) -> None:
-        self.plants = []
+        self.plants: list = []
 
     def add_plant(self, plant: str) -> None:
         if plant == "":

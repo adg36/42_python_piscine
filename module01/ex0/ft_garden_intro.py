@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-def ft_garden_intro():
+def ft_garden_intro() -> None:
     """This function prints information about my plant."""
     name = "Rose"
     height = "25cm"
@@ -12,7 +12,8 @@ def ft_garden_intro():
           "\n\n=== End of Program ===")
 
 
-def main():
+def main() -> None:
+    """This is the main function."""
     ft_garden_intro()
 
 

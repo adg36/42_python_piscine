@@ -33,9 +33,5 @@ def ft_achievement_tracker() -> None:
           f"Bob unique: {bob_only}\n")
 
 
-def main() -> None:
-    ft_achievement_tracker()
-
-
 if __name__ == "__main__":
-    main()
+    ft_achievement_tracker()

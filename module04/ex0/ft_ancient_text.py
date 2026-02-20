@@ -11,16 +11,11 @@ def ft_ancient_text() -> None:
         print("Connection established...\n"
               "\nRECOVERED DATA:")
         print(file.read())
+        file.close()
+        print("\nData recovery complete. Storage unit disconnected.")
     except FileNotFoundError:
         print("ERROR: Storage vault not found. Run data generator first.")
 
-    file.close()
-    print("\nData recovery complete. Storage unit disconnected.")
-
-
-def main() -> None:
-    ft_ancient_text()
-
 
 if __name__ == "__main__":
-    main()
+    ft_ancient_text()

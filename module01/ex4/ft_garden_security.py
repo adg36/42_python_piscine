@@ -2,7 +2,7 @@
 
 class SecurePlant:
     """This class creates plant objects with protected data."""
-    def __init__(self, name: str, height: int, age: int):
+    def __init__(self, name: str, height: int, age: int) -> None:
         """This function initializes the class."""
         self.name = name
         self.height = 0
@@ -10,7 +10,7 @@ class SecurePlant:
         self.set_height(height)
         self.set_age(age)
 
-    def set_height(self, height: int):
+    def set_height(self, height: int) -> None:
         """Set the plant's height."""
         if height >= 0:
             self.height = height
@@ -19,7 +19,7 @@ class SecurePlant:
                   f"height {height}cm [REJECTED]\n"
                   f"Security: Negative height rejected\n")
 
-    def set_age(self, age: int):
+    def set_age(self, age: int) -> None:
         """Set the plant's age."""
         if age >= 0:
             self.age = age
@@ -37,7 +37,7 @@ class SecurePlant:
         return self.age
 
 
-def ft_garden_security():
+def ft_garden_security() -> None:
     """Create plants safely and print relevant information."""
     rose = SecurePlant("Rose", 25, 30)
     print("=== Garden Security System ===\n"
@@ -49,7 +49,8 @@ def ft_garden_security():
           f"{rose.get_age()} days)")
 
 
-def main():
+def main() -> None:
+    """This is the main function."""
     ft_garden_security()
 
 

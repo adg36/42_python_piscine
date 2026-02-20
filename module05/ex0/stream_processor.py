@@ -125,7 +125,7 @@ def demonstrate_polymorphism(processors: List[DataProcessor],
 
 def ft_stream_processor() -> None:
     print("=== CODE NEXUS - DATA PROCESSOR FOUNDATION ===")
-    
+
     processors = {
             "Numeric": (NumericProcessor(), [1, 2, 3, 4, 5]),
             "Text": (TextProcessor(), "Hello Nexus World"),

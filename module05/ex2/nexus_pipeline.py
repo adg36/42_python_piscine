@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict, Union, Protocol
+from typing import Any, List, Union, Protocol
 import time
 
 
 class ProcessingStage(Protocol):
-    
+
     def process(self, data: Any) -> Any:
         pass
 
@@ -21,6 +21,7 @@ class ProcessingPipeline(ABC):
     def add_stage(self, stage: ProcessingStage) -> None:
         self.stages.append(stage)
 
+    @abstractmethod
     def process(self, data: Any) -> Any:
         start = time.time()
         for i, stage in enumerate(self.stages):
@@ -31,7 +32,8 @@ class ProcessingPipeline(ABC):
                 print(f"Error detected in Stage {i + 1}: {e}")
                 print("Recovery initiated: Switching to backup processor")
                 data = self._recover(data, stage)
-                print("Recovery successful: Pipeline restored, processing resumed")
+                print("Recovery successful: "
+                      "Pipeline restored, processing resumed")
         self.stats["records_processed"] += 1
         self.stats["total_time"] += time.time() - start
         return data
@@ -42,53 +44,42 @@ class ProcessingPipeline(ABC):
 
 class InputStage:
 
-    def process(self, data: Any) -> Dict:
+    def process(self, data: Any) -> Any:
         print(f"Input: {data}")
-        if isinstance(data, dict):
-            return data
-        else:
-            data_dict = {}
-            data_dict["data"] = data
-            return data_dict
+        return data
 
 
 class TransformStage:
 
-    def process(self, data: Any) -> Dict:
+    def process(self, data: Any) -> Any:
         if isinstance(data, dict) and "value" in data.keys():
             value = data["value"]
             status = "Normal range" if 15 <= value <= 30 else "Critical"
             enriched = {**data, "status": status}
-            print(f"Transform: Enriched with metadata and validation")
+            print("Transform: Enriched with metadata and validation")
             return enriched
-        elif isinstance(data, dict) and "data" in data.keys():
-            raw = data["data"]
-            if isinstance(raw, str) and "," in raw:
-                data["data"] = raw.split(",")
-                print("Transform: Parsed and structured data")
-            else:
-                print("Transform: Aggregated and filtered")
-            return data
+        elif isinstance(data, str) and "," in data:
+            data = data.split(",")
+            print("Transform: Parsed and structured data")
+        else:
+            print("Transform: Aggregated and filtered")
+        return data
 
 
 class OutputStage:
 
-    def process(self, data: Any) -> str:
+    def process(self, data: Any) -> Any:
         if isinstance(data, dict) and "sensor" in data:
             sensor = data.get("sensor", "unknown")
             value = data.get("value", 0)
             status = data.get("status", "Unknown status")
             line = (f"Output: Processed {sensor} reading: "
                     f"{value}°C ({status})")
-        elif isinstance(data, dict) and "data" in data:
-            raw = data["data"]
-            if isinstance(raw, list):
-                line = f"Output: User activity logged: {len(raw)} actions processed"
-            else:
-                line = f"Output: Stream summary: 5 readings, avg: 22.1°C"
+        elif isinstance(data, list):
+            line = (f"Output: User activity logged: "
+                    f"{len(data)} actions processed")
         else:
-            line = f"Output: Data processed"
-        print(line)
+            line = "Output: Stream data processed"
         return line
 
 
@@ -155,28 +146,27 @@ class NexusManager:
             print(f"No pipeline registered for {data_type}")
         return result
 
-
     def chain(self, data: Any, pipeline_ids: List[str]) -> Any:
-        ordered = []
+        print("\n=== Pipeline Chaining Demo ===")
+        print(" -> ".join(pipeline_ids))
+
+        start = time.perf_counter()
+
+        stages = 0
         for pid in pipeline_ids:
             for p in self.pipelines:
                 if p.pipeline_id == pid:
-                    ordered.append(p)
-        for pipeline in ordered:
-            data = pipeline.process(data)
-        return data
+                    print(f"\nPassing data into pipeline: {pid}")
+                    data = p.process(data)
+                    stages += len(p.stages)
+        duration = time.perf_counter() - start
 
-    def print_stats(self) -> None:
-        print("\n=== Pipeline Statistics ===")
-        for pipeline in self.pipelines:
-            s = pipeline.stats
-            avg = (s["total_time"] / s["records_processed"]
-                   if s["records_processed"] > 0 else 0)
-            print(f"{pipeline.pipeline_id}: "
-                  f"{s['records_processed']} records, "
-                  f"{s['errors']} errors, "
-                  f"{s['total_time']:.3f}s total, "
-                  f"{avg:.4f}s avg")
+        print("\nChain result: "
+              f"1 record processed through "
+              f"{len(pipeline_ids)}-stage pipeline")
+
+        print("\nPerformance: 95% efficiency, "
+              f"{duration:.1f}s total processing time")
 
 
 def main():
@@ -195,40 +185,50 @@ def main():
     print("Stage 1: Input validation and parsing")
     print("Stage 2: Data transformation and enrichment")
     print("Stage 3: Output formatting and delivery")
-    
+
     print("\n=== Multi-Format Data Processing ===")
-    
+
     for pipeline in pipelines:
         pipeline.add_stage(InputStage())
         pipeline.add_stage(TransformStage())
         pipeline.add_stage(OutputStage())
         manager.add_pipeline(pipeline)
-    
+
     data = [{"sensor": "temp", "value": 23.5, "unit": "C"},
             "user,action,timestamp",
-            "Real-time sensor stream"
-    ]
+            "Real-time sensor stream"]
+
     for batch in data:
         result = manager.process(batch)
         print(result)
 
-    print("\n=== Pipeline Chaining Demo ===")
-    print("Pipeline A -> Pipeline B -> Pipeline C")
-    print("Data flow: Raw -> Processed -> Analyzed -> Stored")
+    json_pipeline = JSONAdapter("Pipeline A")
+    json_pipeline.add_stage(InputStage())
+    json_pipeline.add_stage(TransformStage())
+    json_pipeline.add_stage(OutputStage())
 
-    chain_a = JSONAdapter("Chain_A")
-    chain_b = JSONAdapter("Chain_B")
-    chain_c = JSONAdapter("Chain_C")
-    for p in [chain_a, chain_b, chain_c]:
-        p.add_stage(InputStage())
-        manager.add_pipeline(p)
+    csv_pipeline = CSVAdapter("Pipeline B")
+    csv_pipeline.add_stage(InputStage())
+    csv_pipeline.add_stage(TransformStage())
+    csv_pipeline.add_stage(OutputStage())
 
-    chain_result = manager.chain(
-        {"sensor": "chain_test", "value": 22.0, "unit": "C"},
-        ["Chain_A", "Chain_B", "Chain_C"]
-    )
-    print("Chain result: 100 records processed through 3-stage pipeline")
-    print("Performance: 95% efficiency, 0.2s total processing time")
+    stream_pipeline = StreamAdapter("Pipeline C")
+    stream_pipeline.add_stage(InputStage())
+    stream_pipeline.add_stage(TransformStage())
+    stream_pipeline.add_stage(OutputStage())
+
+    chain_manager = NexusManager()
+    chain_manager.add_pipeline(json_pipeline)
+    chain_manager.add_pipeline(csv_pipeline)
+    chain_manager.add_pipeline(stream_pipeline)
+
+    sensor_data = {
+            "sensor": "thermometer",
+            "value": 42
+    }
+
+    chain_manager.chain(sensor_data,
+                        ["Pipeline A", "Pipeline B", "Pipeline C"])
 
     print("\n=== Error Recovery Test ===")
     print("Simulating pipeline failure...")
@@ -241,9 +241,8 @@ def main():
     error_pipeline.add_stage(BadStage())
     error_pipeline.add_stage(OutputStage())
     manager.add_pipeline(error_pipeline)
-    error_pipeline.process({"sensor": "broken", "value": 0, "status": "recovered"})
-
-    manager.print_stats()
+    error_pipeline.process({"sensor": "broken",
+                            "value": 0, "status": "recovered"})
 
     print("\nNexus Integration complete. All systems operational.")
 

@@ -12,22 +12,18 @@ def ft_vault_security() -> None:
             print("Vault connection established with failsafe protocols\n"
                   "\nSECURE EXTRACTION:")
             print(f.read())
+
+        with open(file, "a+") as f:
+            print("\nSECURE PRESERVATION:", end="")
+            line = "\n[CLASSIFIED] New security protocols archived\n"
+            f.write(line)
+            print(line, end="")
+
+        print("Vault automatically sealed upon completion.\n")
+        print("All vault operations completed with maximum security.")
     except FileNotFoundError:
         print("ERROR: Storage vault not found.\n")
 
-    with open(file, "a+") as f:
-        print("\nSECURE PRESERVATION:")
-        line = "[CLASSIFIED] New security protocols archived\n"
-        f.write(line)
-        print(line, end="")
-
-    print("Vault automatically sealed upon completion.\n")
-    print("All vault operations completed with maximum security.")
-
-
-def main() -> None:
-    ft_vault_security()
-
 
 if __name__ == "__main__":
-    main()
+    ft_vault_security()

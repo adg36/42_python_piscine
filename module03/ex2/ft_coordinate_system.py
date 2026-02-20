@@ -7,6 +7,8 @@ def ft_coordinate_system() -> None:
     pos_a = (0, 0, 0)
     pos_b = (10, 20, 5)
 
+    print("=== Game Coordinate System ===\n")
+
     print(f"Position created: {pos_b}")
     print_distance(pos_a, pos_b)
 
@@ -47,10 +49,5 @@ def print_distance(pos_a: tuple, pos_b: tuple) -> None:
     print(f"Distance between {pos_a} and {pos_b}: {distance:.2f}\n")
 
 
-def main() -> None:
-    print("=== Game Coordinate System ===\n")
-    ft_coordinate_system()
-
-
 if __name__ == "__main__":
-    main()
+    ft_coordinate_system()

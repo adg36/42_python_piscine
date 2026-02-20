@@ -4,6 +4,8 @@ import sys
 def ft_score_analytics() -> None:
     args = sys.argv
 
+    print(" === Player Score Analytics ===")
+
     if len(args) == 1:
         print("No scores provided. "
               "Usage: python3 ft_score_analytics.py <score1> <score2> ...")
@@ -34,10 +36,5 @@ def ft_score_analytics() -> None:
               f"Score range: {score_range}")
 
 
-def main() -> None:
-    print(" === Player Score Analytics ===")
-    ft_score_analytics()
-
-
 if __name__ == "__main__":
-    main()
+    ft_score_analytics()

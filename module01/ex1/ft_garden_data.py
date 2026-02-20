@@ -2,7 +2,7 @@
 
 class Plant:
     """A blueprint to represent plants."""
-    def __init__(self, name: str, height: int, age: int):
+    def __init__(self, name: str, height: int, age: int) -> None:
         """This function initialises the class."""
         self.name = name
         self.height = height
@@ -15,12 +15,13 @@ def ft_garden_data():
     sunflower = Plant("Sunflower", 80, 45)
     cactus = Plant("Cactus", 15, 120)
     plants = [rose, sunflower, cactus]
-    print("=== Garden Plant Registry ===\n")
+    print("=== Garden Plant Registry ===")
     for plant in plants:
         print(f"{plant.name}: {plant.height}cm, {plant.age} days old")
 
 
-def main():
+def main() -> None:
+    """This is the main function."""
     ft_garden_data()
 
 

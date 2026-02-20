@@ -85,9 +85,5 @@ def ft_analytics_dashboard() -> None:
           f"points, {top_info['achievements_count']} achievements)")
 
 
-def main() -> None:
-    ft_analytics_dashboard()
-
-
 if __name__ == "__main__":
-    main()
+    ft_analytics_dashboard()

@@ -8,8 +8,7 @@ def water_plants(plant_list: list) -> None:
             if plant is None:
                 errors = 1
                 raise ValueError()
-            else:
-                print("Watering", plant)
+            print("Watering", plant)
     except ValueError:
         print(f"Error: Cannot water {plant} - invalid plant!")
     finally:

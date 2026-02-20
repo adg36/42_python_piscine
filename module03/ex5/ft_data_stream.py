@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 
 
+from typing import Generator
 import time
 
 
-def fibonacci() -> None:
+def fibonacci() -> Generator[int, None, None]:
     a, b = 0, 1
     while True:
         yield a
         a, b = b, a + b
 
 
-def primes() -> None:
+def primes() -> Generator[int, None, None]:
     n = 2
     while True:
         is_prime = True
@@ -26,7 +27,7 @@ def primes() -> None:
         n += 1
 
 
-def event_stream(events: dict) -> None:
+def event_stream(events: list[dict]) -> Generator[dict, None, None]:
     for event in events:
         yield event
 
@@ -66,6 +67,8 @@ def ft_data_stream() -> None:
         elif event["event_type"] == "level_up":
             levelled_up += 1
             action = "leveled up"
+        else:
+            action = event["event_type"]
 
         if event["data"]["level"] >= 10:
             high_level_players += 1
@@ -96,9 +99,5 @@ def ft_data_stream() -> None:
     print("Primes (first 5):", ", ".join(prime_values))
 
 
-def main() -> None:
-    ft_data_stream()
-
-
 if __name__ == "__main__":
-    main()
+    ft_data_stream()

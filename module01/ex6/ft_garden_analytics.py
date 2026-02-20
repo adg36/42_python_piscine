@@ -2,7 +2,7 @@
 
 class GardenManager:
     """A class to manage gardens."""
-    gardens = []
+    gardens: list = []
 
     def __init__(self) -> None:
         """This function initializes the class."""
@@ -66,12 +66,12 @@ class GardenManager:
 
 class Garden:
     """A blueprint to represent gardens."""
-    def __init__(self, owner: str, total_growth: int, score: int):
+    def __init__(self, owner: str, total_growth: int, score: int) -> None:
         """This function initializes the class."""
         self.owner = owner
         self.score = score
         self.total_growth = 0
-        self.plants = []
+        self.plants: list = []
 
     def add_plant(self, plant: "Plant") -> None:
         """Adds one plant to garden."""
@@ -123,9 +123,11 @@ class Plant:
         print(f"{self.name} grew 1cm")
 
     def describe(self) -> str:
+        """Describes the plant."""
         return f"{self.name}: {self.height}cm"
 
     def get_category(self) -> str:
+        """Returns the category."""
         return "regular"
 
 
@@ -136,9 +138,11 @@ class FloweringPlant(Plant):
         self.color = color
 
     def describe(self) -> str:
+        """Describes the plant."""
         return f"{self.name}: {self.height}cm, {self.color} flowers (blooming)"
 
     def get_category(self) -> str:
+        """Returns the category."""
         return "flowering"
 
 
@@ -150,11 +154,13 @@ class PrizeFlower(FloweringPlant):
         self.points = points
 
     def describe(self) -> str:
+        """Describes the plant."""
         return (f"{self.name}: {self.height}cm, "
                 f"{self.color} flowers (blooming), "
                 f"Prize points: {self.points}")
 
     def get_category(self) -> str:
+        """Returns the category."""
         return "prize"
 
 
@@ -184,6 +190,7 @@ def ft_garden_analytics() -> None:
 
 
 def main() -> None:
+    """This is the main function."""
     ft_garden_analytics()
 
 

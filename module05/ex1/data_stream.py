@@ -11,6 +11,8 @@ class DataStream(ABC):
         self.stream_type = stream_type
         self.processed_count = 0
         self.error_count = 0
+        self.name = ""
+        self.ops = ""
 
     @abstractmethod
     def process_batch(self, data_batch: List[Any]) -> str:
@@ -180,9 +182,9 @@ class StreamProcessor:
             try:
                 stream_id = stream.stream_id
                 if stream_id in batches:
-
-                     results.append(f"- {stream.name} data: "
-                                   f"{stream.processed_count} {stream.ops} processed")
+                    results.append(f"- {stream.name} data: "
+                                   f"{stream.processed_count} "
+                                   f"{stream.ops} processed")
             except Exception as e:
                 results.append(f"- Error processing {stream.stream_id}: {e}")
 
@@ -209,11 +211,11 @@ class StreamProcessor:
 
 def data_stream() -> None:
     print("=== CODE NEXUS - POLYMORPHIC STREAM SYSTEM ===")
-    
+
     stream_proc = StreamProcessor()
 
     data = [
-            (SensorStream("SENSOR_001"),[25.0, 27.5, 22.5, 35.7]),
+            (SensorStream("SENSOR_001"), [25.0, 27.5, 22.5, 35.7]),
             (TransactionStream("TRANS_001"), [100, -150, 75]),
             (EventStream("EVENT_001"), ["login", "error", "logout"])
     ]

@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
+
 import sys
 
 
-def ft_command_quest() -> None:
+def main() -> None:
     name = f"Program name: {sys.argv[0]}"
     total = f"Total arguments: {len(sys.argv)}"
 
@@ -16,10 +18,6 @@ def ft_command_quest() -> None:
             print(f"Argument {i}: {sys.argv[i]}")
             i += 1
         print(f"{total}")
-
-
-def main() -> None:
-    ft_command_quest()
 
 
 if __name__ == "__main__":
