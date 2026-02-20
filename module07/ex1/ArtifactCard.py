@@ -1,5 +1,3 @@
-# permanent game modifiers
-
 from enum import Enum
 from ex0.Card import Card
 from typing import Any, Dict
@@ -20,7 +18,7 @@ class ArtifactCard(Card):
             return {
                 'card_played': self.name,
                 'mana_used': self.cost,
-                'effect': f'{self.effect}: +{self.durability} mana per turn'
+                'effect': self.effect
             }
         else:
             return {
@@ -32,7 +30,7 @@ class ArtifactCard(Card):
     def activate_ability(self) -> Dict[str, Any]:
         return {
                'artifact': self.name,
-               'effect': f'{self.effect}: +{self.durability} mana per turn'
+               'effect': self.effect
         }
 
 

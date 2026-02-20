@@ -1,5 +1,3 @@
-# the blueprint that defines how all cards behave
-
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
@@ -22,6 +20,8 @@ class Card(ABC):
             'type': getattr(self, 'type', None),
             'attack': getattr(self, 'attack', None),
             'health': getattr(self, 'health', None),
+            'damage': getattr(self, 'damage', None),
+            'combat_type': getattr(self, 'combat_type', None)
         }
 
     def is_playable(self, available_mana: int) -> bool:

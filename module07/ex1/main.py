@@ -22,7 +22,8 @@ def main() -> None:
     # create cards
     creature_card = CreatureCard("Fire Dragon", 5, "Legendary", 7, 5)
     spell_card = SpellCard("Lightning Bolt", 3, "Common", "damage")
-    artifact_card = ArtifactCard("Mana Crystal", 2, "Rare", 1, "Permanent")
+    artifact_card = ArtifactCard(
+            "Mana Crystal", 2, "Common", 5, "Permanent: +1 mana per turn")
 
     # add cards to deck
     deck.add_card(creature_card)

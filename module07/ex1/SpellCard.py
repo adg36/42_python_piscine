@@ -1,5 +1,3 @@
-# instant magic effects
-
 from enum import Enum
 from ex0.Card import Card
 from typing import Any, Dict

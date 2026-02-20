@@ -13,7 +13,7 @@ def main() -> None:
         print(f"- {parent.__name__}: {methods}")
 
     # create Elite Card
-    elite_card = EliteCard("Arcane Warrior", 4, "Ultra-Rare", 5, "melee")
+    elite_card = EliteCard("Arcane Warrior", 4, "Ultra-Rare", "melee")
 
     print("\nPlaying Arcane Warrior (Elite Card):")
 

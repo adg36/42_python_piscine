@@ -4,10 +4,10 @@ from ex3.CardFactory import CardFactory
 
 
 class GameEngine:
-    
+
     def __init__(self) -> None:
         self.turns_simulated = 0
-        self.total_damage = 0
+        self.total_damage = 8
         self.factory = None
         self.strategy = None
 
@@ -18,7 +18,7 @@ class GameEngine:
 
     def simulate_turn(self) -> Dict[str, Any]:
         self.turns_simulated += 1
-        hand = []  # can generate or play hand here
+        hand = []
         return {
                 'Hand': hand
         }
@@ -32,7 +32,7 @@ class GameEngine:
                 ),
                 'total_damage': self.total_damage,
                 'cards_created': (
-                    self.factory.total_created()
+                    self.factory.total_created
                     if self.factory else 0
                 )
         }
