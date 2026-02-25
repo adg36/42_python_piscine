@@ -31,7 +31,7 @@ def main() -> None:
               # prints the env variable called VIRTUAL_ENV
               # from the base name of path
               "Virtual Environment: "
-              f"{os.path.basename(os.environ.get("VIRTUAL_ENV", ""))}\n"
+              f"{os.path.basename(sys.prefix)}\n"
               f"Environment Path: {sys.prefix}\n"
               "\nSUCCESS: you're in an isolated environment!\n"
               "Safe to install packages without affecting\n"
