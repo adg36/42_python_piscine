@@ -18,25 +18,29 @@ def main() -> None:
         notes: Optional[str] = Field(None, max_length=200)
 
     data = {
-            'station_id': 'ISS001',
-            'name': 'International Space Station',
-            'crew_size': 6,
-            'power_level': 85.5,
-            'oxygen_level': 92.3,
-            'last_maintenance': '2026-02-25'
+        'station_id': 'LGW723',
+        'name': 'Mars Orbital Platform',
+        'crew_size': 11,
+        'power_level': 90.8,
+        'oxygen_level': 87.3,
+        'last_maintenance': '2023-09-25T00:00:00',
+        'is_operational': False,
+        'notes': 'System diagnostics required'
     }
 
     station = SpaceStation(**data)
 
     print("Space Station Data Validation\n"
-          "========================================\n")
+          "========================================")
     print("Valid station created:\n"
           f"ID: {station.station_id}\n"
           f"Name: {station.name}\n"
           f"Crew: {station.crew_size} people\n"
           f"Power: {station.power_level}%\n"
           f"Oxygen: {station.oxygen_level}%\n"
-          f"Status: {'Operational' if station.is_operational else 'Idle'}\n")
+          f"Status: {'Operational' if station.is_operational else 'Idle'}")
+    if data['notes'] is not None:
+        print(f"Notes: {station.notes}")
 
     data = {
             'station_id': 'ISS001',
@@ -44,10 +48,10 @@ def main() -> None:
             'crew_size': 26,
             'power_level': 85.5,
             'oxygen_level': 92.3,
-            'last_maintenance': '2026-02-25'
+            'last_maintenance': '2026-02-25T00:00:00'
     }
 
-    print("========================================\n"
+    print("\n========================================\n"
           "Expected validation error:")
     try:
         station_error = SpaceStation(**data)
