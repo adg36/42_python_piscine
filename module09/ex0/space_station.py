@@ -25,9 +25,9 @@ def main() -> None:
             'oxygen_level': 92.3,
             'last_maintenance': '2026-02-25'
     }
-    
+
     station = SpaceStation(**data)
-    
+
     print("Space Station Data Validation\n"
           "========================================\n")
     print("Valid station created:\n"
@@ -37,7 +37,6 @@ def main() -> None:
           f"Power: {station.power_level}%\n"
           f"Oxygen: {station.oxygen_level}%\n"
           f"Status: {'Operational' if station.is_operational else 'Idle'}\n")
-
 
     data = {
             'station_id': 'ISS001',
