@@ -1,18 +1,23 @@
-import sys
 import os
-from dotenv import load_dotenv
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    print("Missing module dotenv\n"
+          "Install with 'python3 -m pip install python-dotenv\n")
+    exit()
 
 
 load_dotenv()
 
 
 def main() -> None:
-    
+
     print("ORACLE STATUS: Reading the Matrix...\n")
-    
+
     env_var = os.environ
     print("Configuration loaded:")
-    
+
     settings = [
             ('Mode', 'MATRIX_MODE', 'Unknown'),
             ('Database', 'DATABASE_URL', 'No connection established'),
