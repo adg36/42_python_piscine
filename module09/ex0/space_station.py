@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
-from pydantic import BaseModel, Field, ValidationError
 from typing import Optional
+from pydantic import BaseModel, Field, ValidationError
 
 
 class SpaceStation(BaseModel):
@@ -30,37 +30,37 @@ def main() -> None:
 
     print("Space Station Data Validation\n"
           "========================================")
-    
+
     try:
         station = SpaceStation(**valid_data)
         print("Valid station created:")
         print(
-                f"ID: {station.station_id}\n"
-                f"Name: {station.name}\n"
-                f"Crew: {station.crew_size} people\n"
-                f"Power: {station.power_level}%\n"
-                f"Oxygen: {station.oxygen_level}%\n"
-                f"Status: {'Operational' if station.is_operational else 'Idle'}"
+            f"ID: {station.station_id}\n"
+            f"Name: {station.name}\n"
+            f"Crew: {station.crew_size} people\n"
+            f"Power: {station.power_level}%\n"
+            f"Oxygen: {station.oxygen_level}%\n"
+            f"Status: {'Operational' if station.is_operational else 'Idle'}"
         )
-        
+
         if station.notes is not None:
             print(f"Notes: {station.notes}")
-    
+
     except ValidationError as e:
         for err in e.errors():
             print(f"{err['loc'][0]}: {err['msg']}")
 
     invalid_data = {
-            'station_id': 'ISS001',
-            'name': 'International Space Station',
-            'crew_size': 26,
-            'power_level': 85.5,
-            'oxygen_level': 92.3,
-            'last_maintenance': '2026-02-25T00:00:00'
+        'station_id': 'ISS001',
+        'name': 'International Space Station',
+        'crew_size': 26,
+        'power_level': 85.5,
+        'oxygen_level': 92.3,
+        'last_maintenance': '2026-02-25T00:00:00'
     }
 
     try:
-        station_error = SpaceStation(**invalid_data)
+        SpaceStation(**invalid_data)
     except ValidationError as e:
         print("\n========================================")
         print("Expected validation error:")
