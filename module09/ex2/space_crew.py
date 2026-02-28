@@ -35,21 +35,21 @@ class SpaceMission(BaseModel):
     mission_status: str = Field(default='planned')
     budget_millions: float = Field(ge=1.0, le=10000.0)
 
-    def has_leadership(self, crew):
-        for member in crew:
-            if member.rank == Rank.CAPTAIN or member.rank == Rank.COMMANDER:
+    def has_leadership(self):
+        for member in self.crew:
+            if member.rank in (Rank.CAPTAIN, Rank.COMMANDER):
                 return True
         return False
 
-    def experienced_crew(self, crew):
+    def experienced_crew(self):
         seniors = 0
-        for member in crew:
+        for member in self.crew:
             if member.years_experience > 5:
                 seniors += 1
-        return True if seniors >= len(crew)/2 else False
+        return seniors >= len(self.crew) / 2
 
-    def all_members_active(self, crew):
-        for member in crew:
+    def all_members_active(self):
+        for member in self.crew:
             if not member.is_active:
                 return False
         return True
@@ -58,11 +58,11 @@ class SpaceMission(BaseModel):
     def validate_mission(self) -> Self:
         if not self.mission_id.startswith('M'):
             raise ValueError('Mission ID must start with "M"')
-        if not self.has_leadership(self.crew):
+        if not self.has_leadership():
             raise ValueError('Must have at least one Commander or Captain')
-        if self.duration_days > 365 and not self.experienced_crew(self.crew):
+        if self.duration_days > 365 and not self.experienced_crew():
             raise ValueError('Long missions need 50% experienced crew')
-        if not self.all_members_active(self.crew):
+        if not self.all_members_active():
             raise ValueError('All crew members must be active')
         return self
 
