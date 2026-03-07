@@ -43,8 +43,20 @@ def main() -> None:
         return memoized_fibonacci(n-1) + memoized_fibonacci(n-2)
 
     @functools.singledispatch
-    def spell_dispatcher() -> callable:
-        # to do
+    def spell_dispatcher(): 
+        print(f"{spell} launched with success")
+
+    @spell_dispatcher.register(int)
+    def _(spell):
+        print(f"{spell} units of damage caused")
+
+    @spell_dispatcher.register(str)
+    def _(spell):
+        print(f"{spell} enchantment completed")
+
+    @spell_dispatcher.register(list)
+    def _(spell):
+        print(f"{spell} cast for spell in ")
 
 
     print("\nTesting spell reducer...")
@@ -72,6 +84,12 @@ def main() -> None:
 
     print(f"Fib(10): {memoized_fibonacci(10)}")
     print(f"Fib(15): {memoized_fibonacci(15)}")
+
+    print("\nTesting spell dispatcher...")
+
+    spell_dispatcher("Fire")
+    spell_dispatcher(50)
+    spell_dispatcher(["Heal", "Burn", "Levitate"])
 
 
 if __name__ == "__main__":
