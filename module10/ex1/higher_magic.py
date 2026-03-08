@@ -1,29 +1,30 @@
 #!/usr/bin/env python3
 
-def main() -> None:
+from typing import Callable
 
-    def spell_combiner(spell1: callable, spell2: callable) -> callable:
+
+def main() -> None:
+    def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
         def combined(*args, **kwargs):
             r1 = spell1(*args, **kwargs)
             r2 = spell2(*args, **kwargs)
             return (r1, r2)
         return combined
 
-    def power_amplifier(base_spell: callable, multiplier: int) -> callable:
+    def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
         def mega_spell(*args, **kwargs):
             result = base_spell(*args, **kwargs) * multiplier
             return result
         return mega_spell
 
-    def conditional_caster(condition: callable, spell: callable) -> callable:
+    def conditional_caster(condition: Callable, spell: Callable) -> Callable:
         def conditional_spell(*args, **kwargs):
             if condition(*args, **kwargs):
                 return spell(*args, **kwargs)
-            else:
-                return "Spell fizzled"
+            return "Spell fizzled"
         return conditional_spell
 
-    def spell_sequence(spells: list[callable]) -> callable:
+    def spell_sequence(spells: list[Callable]) -> Callable:
         def cast_spells(*args, **kwargs):
             spell_results = []
             for spell in spells:

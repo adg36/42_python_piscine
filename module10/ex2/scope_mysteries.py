@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+from typing import Callable
+
 
 def main() -> None:
 
-    def mage_counter() -> callable:
+    def mage_counter() -> Callable:
         total = 0
 
         def counter():
@@ -12,7 +14,7 @@ def main() -> None:
             return total
         return counter
 
-    def spell_accumulator(initial_power: int) -> callable:
+    def spell_accumulator(initial_power: int) -> Callable:
         total = initial_power
 
         def new_total_power(power: int):
@@ -21,12 +23,12 @@ def main() -> None:
             return total
         return new_total_power
 
-    def enchantment_factory(enchantment_type: str) -> callable:
+    def enchantment_factory(enchantment_type: str) -> Callable:
         def enchantment(item_name):
             return f"{enchantment_type} {item_name}"
         return enchantment
 
-    def memory_vault() -> dict[str, callable]:
+    def memory_vault() -> dict[str, Callable]:
 
         storage = {}
 
