@@ -8,7 +8,7 @@ from ex4.Rankable import Rankable
 class TournamentCard(Card, Combatable, Rankable):
 
     def __init__(self, name: str, cost: int, rarity: str,
-            rating: int, record: str, card_id: str) -> None:
+                 rating: int, record: str, card_id: str) -> None:
         super().__init__(name, cost, rarity)
         self.rating = rating
         self.record = "0-0"
@@ -47,7 +47,7 @@ class TournamentCard(Card, Combatable, Rankable):
         }
 
     def get_combat_stats(self) -> Dict[str, Any]:
-          pass
+        pass
 
     def calculate_rating(self) -> int:
         pass

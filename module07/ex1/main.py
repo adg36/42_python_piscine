@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from ex0.CreatureCard import CreatureCard
 from ex1.Deck import Deck
 from ex1.SpellCard import SpellCard

@@ -14,16 +14,17 @@ class Deck:
         self.cards.append(card)
 
     def remove_card(self, card_name: str) -> bool:
-        if card_name in self.cards:
-            self.cards.remove(card_name)
-            return True
+        for card in self.cards:
+            if card.name == card_name:
+                self.cards.remove(card)
+                return True
         return False
 
     def shuffle(self) -> None:
         random.shuffle(self.cards)
 
     def draw_card(self) -> Card:
-        return self.cards[0]
+        return self.cards.pop(0)
 
     def get_deck_stats(self) -> dict:
 
@@ -37,7 +38,10 @@ class Deck:
                 1 for card in self.cards
                 if isinstance(card, ArtifactCard))
         total_cost = sum(card.cost for card in self.cards)
-        avg_cost = round(total_cost / len(self.cards), 1)
+        if len(self.cards) != 0:
+            avg_cost = round(total_cost / len(self.cards), 1)
+        else:
+            avg_cost = 0
 
         return {
                 'total_cards': len(self.cards),

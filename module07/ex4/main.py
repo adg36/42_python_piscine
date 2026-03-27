@@ -6,11 +6,13 @@ def main() -> None:
     print("=== DataDeck Tournament Platform ===\n")
 
     print("Registering Tournament Cards...\n")
-    
+
     platform = TournamentPlatform()
 
-    fire_dragon = TournamentCard("Fire Dragon", 5, "Legendary", 1200, "0-0", "dragon_001")
-    ice_wizard = TournamentCard("Ice Wizard", 7, "Rare", 1150, "0-0", "wizard_001")
+    fire_dragon = TournamentCard(
+            "Fire Dragon", 5, "Legendary", 1200, "0-0", "dragon_001")
+    ice_wizard = TournamentCard(
+            "Ice Wizard", 7, "Rare", 1150, "0-0", "wizard_001")
     cards = (fire_dragon, ice_wizard)
     for card in cards:
         message = platform.register_card(card)

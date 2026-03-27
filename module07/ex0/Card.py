@@ -17,14 +17,7 @@ class Card(ABC):
             'name': self.name,
             'cost': self.cost,
             'rarity': self.rarity,
-            'type': getattr(self, 'type', None),
-            'attack': getattr(self, 'attack', None),
-            'health': getattr(self, 'health', None),
-            'damage': getattr(self, 'damage', None),
-            'combat_type': getattr(self, 'combat_type', None)
         }
 
     def is_playable(self, available_mana: int) -> bool:
-        if available_mana < self.cost:
-            return False
-        return True
+        return available_mana >= self.cost

@@ -21,7 +21,7 @@ class AggressiveStrategy(GameStrategy):
             damage = random.randint(1, damage) if damage > 0 else 0
             damage_dealt += damage
             targets_attacked = self.prioritize_targets(battlefield)
-        
+
         targets_attacked = self.prioritize_targets(battlefield)
 
         return {

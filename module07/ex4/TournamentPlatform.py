@@ -21,7 +21,7 @@ class TournamentPlatform:
         return (f"{card.name} (ID: {card.card_id}):\n"
                 f"- Interfaces: {interfaces}\n"
                 f"- Rating: {card.rating}\n"
-                f"- Record: {card.record}\n")        
+                f"- Record: {card.record}\n")
 
     def create_match(self, card1_id: str, card2_id: str) -> Dict[str, Any]:
         self.matches_played += 1
@@ -39,7 +39,7 @@ class TournamentPlatform:
                 'winner_rating': winner.rating,
                 'loser_rating': loser.rating
         }
-    
+
     def get_leaderboard(self) -> List[Any]:
         sorted_ids = sorted(
                 self.cards, reverse=True)
