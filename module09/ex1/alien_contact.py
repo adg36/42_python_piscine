@@ -36,7 +36,7 @@ class AlienContact(BaseModel):
                 and self.witness_count < 3):
             raise ValueError(
                 'Telepathic contact requires at least 3 witnesses')
-        if self.signal_strength > 7.0 and self.message_received is None:
+        if self.signal_strength > 7.0 and not self.message_received:
             raise ValueError(
                 'Strong signals (> 7.0) should include received messages')
         return self
@@ -83,8 +83,8 @@ def main() -> None:
         'location': 'Area 51, Nevada',
         'signal_strength': 8.5,
         'duration_minutes': 45,
-        'witness_count': 2,
-        'message_received': 'Greetings from Zeta Reticuli'
+        'witness_count': 4,
+        'message_received': ''
     }
 
     try:
