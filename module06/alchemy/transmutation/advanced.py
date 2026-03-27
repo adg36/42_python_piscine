@@ -3,6 +3,7 @@
 from .basic import lead_to_gold
 from ..potions import healing_potion
 
+
 def philosophers_stone() -> str:
     lead_to_gold_result = lead_to_gold()
     healing_potion_result = healing_potion()

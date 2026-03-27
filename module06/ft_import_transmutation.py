@@ -6,9 +6,10 @@ import alchemy.elements
 from alchemy.potions import healing_potion as heal, strength_potion as strength
 from alchemy.elements import create_fire, create_water
 
+
 def ft_import_transmutation() -> None:
     print("=== Import Transmutation Mastery ===")
-    
+
     # method 1
     print("\nMethod 1 - Full module import:")
     print(f"alchemy.elements.create_air(): {alchemy.elements.create_air()}")
@@ -28,6 +29,7 @@ def ft_import_transmutation() -> None:
     print(f"strength_potion(): {strength()}")
 
     print("\nAll import transmutation methods mastered!")
+
 
 def main() -> None:
     ft_import_transmutation()
