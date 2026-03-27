@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "loading"
-version = "1.0.0"
-description = "A project for 42"
+version = "0.1.0"
+description = "Data analysis program"
 authors = ["razevedo <razevedo@student.42porto.com>"]
 
 [tool.poetry.dependencies]
 pandas = "^2.1.0"
 python = "^3.10"
-requests = "^2.31.0"
+numpy = "^2.2.6"
 matplotlib = "^3.7.2"
 
 [build-system]

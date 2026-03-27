@@ -1,11 +1,12 @@
 import os
+import sys
 
 try:
     from dotenv import load_dotenv
 except ImportError:
     print("Missing module dotenv\n"
           "Install with 'python3 -m pip install python-dotenv\n")
-    exit()
+    sys.exit(1)
 
 
 load_dotenv()
@@ -16,7 +17,6 @@ def main() -> None:
     print("ORACLE STATUS: Reading the Matrix...\n")
 
     env_var = os.environ
-    print("Configuration loaded:")
 
     settings = [
             ('Mode', 'MATRIX_MODE', 'Unknown'),
@@ -25,12 +25,15 @@ def main() -> None:
             ('Log Level', 'LOG_LEVEL', 'Unknown'),
             ('Zion Network', 'ZION_ENDPOINT', 'Offline')
     ]
+
+    print("Configuration loaded:")
+
     for name, key, default in settings:
         value = env_var.get(key)
         if value is None:
             print(f"{name}: {default}")
         else:
-            if name == 'Mode' or name == 'Log Level':
+            if name in ['Mode', 'Log Level']:
                 print(f"{name}: {env_var[key]}")
             elif name == 'Database':
                 print(f"{name}: Connected to local instance")
